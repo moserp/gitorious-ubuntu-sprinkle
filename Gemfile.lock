@@ -1,7 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.0.1)
+    activesupport (2.3.10)
     capistrano (2.5.19)
       highline
       net-scp (>= 1.0.0)
@@ -25,5 +25,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (~> 2.3)
   capistrano
   sprinkle
