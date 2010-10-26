@@ -51,14 +51,14 @@ package :sendmail do
 end
 
 package :ruby do
-  apt 'ruby1.9 ruby1.9-dev libopenssl-ruby1.9' do
-    post :install, 'ln -sf /usr/bin/ruby1.9 /usr/local/bin/ruby'
+  apt 'ruby1.9.1 ruby1.9.1-dev libopenssl-ruby1.9.1' do
+    post :install, 'ln -sf /usr/bin/ruby1.9.1 /usr/local/bin/ruby'
   end
 end
 
 package :rubygems do
-  apt 'rubygems1.9' do
-    post :install, 'ln -sf /usr/bin/gem1.9 /usr/local/bin/gem'
+  apt 'rubygems1.9.1' do
+    post :install, 'ln -sf /usr/bin/gem1.9.1 /usr/local/bin/gem'
   end
 end
 
