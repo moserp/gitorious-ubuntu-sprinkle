@@ -13,8 +13,8 @@ package :ubuntu do
   requires :zlib
 #  requires :onig
 #  requires :sphinx
-  requires :java
-  requires :activemq
+  #requires :java
+  #requires :activemq
   requires :passenger
 end
 
@@ -91,7 +91,9 @@ package :activemq do
 end
 
 package :passenger do
+  apt 'libcurl4-openssl-dev'
   gem 'passenger' do
-    post :install, '/var/lib/gems/1.9.0/bin/passenger-install-apache2-module --auto'
+    http_proxy 'http://proxy.intra.bt.com:8080'
+    post :install, '/var/lib/gems/1.9.1/bin/passenger-install-apache2-module --auto'
   end
 end

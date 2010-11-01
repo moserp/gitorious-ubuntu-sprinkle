@@ -1,3 +1,3 @@
 set :user, 'root'
-role :app, '109.144.14.247', :primary => true
+role :app, '192.168.56.10', :primary => true
 set :use_sudo, false
