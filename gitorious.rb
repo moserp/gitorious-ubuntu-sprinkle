@@ -56,6 +56,24 @@ package :gitorious do
   end
 end
 
+# TODO
+# a2enmod rewrite
+# a2enmod ssl
+# apachectl restart
+#
+
+# TODO as the git user:
+#mkdir .ssh
+#touch .ssh/authorized_keys
+#chmod 700 .ssh
+#chmod 600 .ssh/authorized_keys
+#mkdir tmp/pids
+#mkdir repositories
+#mkdir tarballs
+#cp config/database.yml config/database.yml
+#cp config/gitorious.yml config/gitorious.yml
+#cp config/broker.yml config/broker.yml
+
 package :sprinkle_dependencies do
   apt 'wget'
 end
