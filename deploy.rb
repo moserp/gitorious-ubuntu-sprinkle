@@ -1,3 +1,2 @@
-set :user, 'root'
-role :app, '192.168.56.10', :primary => true
-set :use_sudo, false
+role :server, '192.168.56.10'
+default_run_options[:pty] = true

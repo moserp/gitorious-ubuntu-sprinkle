@@ -1,7 +1,9 @@
 Sprinkle script to install gitorious onto an Ubuntu Server.
 Tested on Ubuntu 10.10.
 
-To use, first edit deploy.rb to set your destination server and user.
+To use, first edit deploy.rb to set your destination server.
+Make sure your user has sudo access.
+
 Then:
 
 gem install bundler sprinkle
