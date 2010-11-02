@@ -31,6 +31,9 @@ package :geoip do
   gem 'geoip' do
     http_proxy 'http://proxy.intra.bt.com:8080'
   end
+  verify do
+    has_gem 'geoip'
+  end
 end
 
 package :imagemagick do

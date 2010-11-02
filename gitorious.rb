@@ -18,6 +18,7 @@ package :rdiscount do
     http_proxy 'http://proxy.intra.bt.com:8080'
   end
   version '1.3.1.1'
+  verify { has_gem 'rdiscount', '1.3.1.1' }
 end
 
 package :stomp do
@@ -25,6 +26,7 @@ package :stomp do
     http_proxy 'http://proxy.intra.bt.com:8080'
   end
   version '1.1'
+  verify { has_gem 'stomp', '1.1' }
 end
 
 package :gitorious_dependencies do
@@ -52,6 +54,7 @@ package :rack do
     http_proxy 'http://proxy.intra.bt.com:8080'
   end
   version '1.0.1'
+  verify { has_gem 'rack', '1.0.1' }
 end
 
 package :gitorious do
@@ -77,6 +80,7 @@ package :gitpoller_initd do
   transfer 'init.d/git-poller', 'git-poller' do
     post :install, 'mv git-poller /etc/init.d/git-poller && chmod 755 /etc/init.d/git-poller'
     post :install, 'update-rc.d git-poller defaults'
+    post :install, '/etc/init.d/git-poller start'
   end
   verify do
     has_file '/etc/init.d/git-poller'
@@ -87,6 +91,7 @@ package :stomp_initd do
   transfer 'init.d/stomp', 'stomp' do
     post :install, 'mv stomp /etc/init.d/stomp && chmod 755 /etc/init.d/stomp'
     post :install, 'update-rc.d stomp defaults'
+    post :install, '/etc/init.d/stomp start'
   end
   verify do
     has_file '/etc/init.d/stomp'
@@ -97,6 +102,7 @@ package :gitdaemon_initd do
   noop do
     post :install, 'cp ~git/doc/templates/ubuntu/git-daemon /etc/init.d/git-daemon'
     post :install, 'update-rc.d git-daemon defaults'
+    post :install, '/etc/init.d/git-daemon start'
   end
   verify do
     has_file '/etc/init.d/git-daemon'
@@ -104,7 +110,6 @@ package :gitdaemon_initd do
 end
 
 # TODO
-# git-daemon script
 # logrotate
 
 # TODO as the git user:
