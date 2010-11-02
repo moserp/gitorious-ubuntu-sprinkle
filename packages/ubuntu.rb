@@ -18,7 +18,7 @@ package :git do
 end
 
 package :ruby do
-  apt 'build-essential zlib1g zlib1g-dev libssl-dev libopenssl-ruby libreadline5-dev ruby ruby-dev'
+  apt 'build-essential zlib1g zlib1g-dev libssl-dev libopenssl-ruby libreadline5-dev ruby ruby-dev rake'
 end
 
 package :rubygems do
