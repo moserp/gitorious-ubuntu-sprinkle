@@ -4,6 +4,13 @@ policy :gitorious, :roles => :server do
   requires :sprinkle_dependencies
   requires :ubuntu_gitorious_dependencies
   requires :gitorious
+  requires :initscripts
+end
+
+package :initscripts do
+  requires :gitdaemon_initd
+  requires :gitpoller_initd
+  requires :stomp_initd
 end
 
 package :rdiscount do
@@ -21,7 +28,10 @@ package :stomp do
 end
 
 package :gitorious_dependencies do
-  [:chronic, :daemons, :hoe, :echoe, :'ruby-yadis', :'ruby-openid', :'mime-types', :'diff-lcs', :json, :'ruby-hmac'].each do |gem_name|
+  gems = [:chronic, :daemons, :hoe, :echoe, :'ruby-yadis', :'ruby-openid',
+    :'mime-types', :'diff-lcs', :json, :'ruby-hmac', :stompserver]
+
+  gems.each do |gem_name|
     puts "installing #{gem_name}"
     gem gem_name do
       http_proxy 'http://proxy.intra.bt.com:8080'
@@ -29,6 +39,12 @@ package :gitorious_dependencies do
   end
   requires :rdiscount
   requires :stomp
+
+  verify do
+    gems.each do |gem|
+      has_gem gem
+    end
+  end
 end
 
 package :rack do
@@ -49,6 +65,7 @@ package :gitorious do
     pre :install, 'chown -R git:git /var/www/gitorious'
     # this next line should work, but http git clone is flakey on gitorious, so using the above tar file instead
     #pre :install, 'export http_proxy=http://proxy.intra.bt.com:8080 && git clone http://git.gitorious.org/gitorious/mainline.git /var/www/gitorious'
+    post :install, 'apachectl restart'
   end
 
   verify do
@@ -56,11 +73,39 @@ package :gitorious do
   end
 end
 
+package :gitpoller_initd do
+  transfer 'init.d/git-poller', 'git-poller' do
+    post :install, 'mv git-poller /etc/init.d/git-poller && chmod 755 /etc/init.d/git-poller'
+    post :install, 'update-rc.d git-poller defaults'
+  end
+  verify do
+    has_file '/etc/init.d/git-poller'
+  end
+end
+
+package :stomp_initd do
+  transfer 'init.d/stomp', 'stomp' do
+    post :install, 'mv stomp /etc/init.d/stomp && chmod 755 /etc/init.d/stomp'
+    post :install, 'update-rc.d stomp defaults'
+  end
+  verify do
+    has_file '/etc/init.d/stomp'
+  end
+end
+
+package :gitdaemon_initd do
+  noop do
+    post :install, 'cp ~git/doc/templates/ubuntu/git-daemon /etc/init.d/git-daemon'
+    post :install, 'update-rc.d git-daemon defaults'
+  end
+  verify do
+    has_file '/etc/init.d/git-daemon'
+  end
+end
+
 # TODO
-# a2enmod rewrite
-# a2enmod ssl
-# apachectl restart
-#
+# git-daemon script
+# logrotate
 
 # TODO as the git user:
 #mkdir .ssh

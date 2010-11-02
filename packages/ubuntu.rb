@@ -7,6 +7,7 @@ package :ubuntu_gitorious_dependencies do
   requires :sphinx
   requires :passenger
   requires :passenger_config
+  requires :memcached
 end
 
 package :mysql do
@@ -41,7 +42,10 @@ package :sphinx do
 end
 
 package :passenger_dependencies do
-  apt 'libcurl4-openssl-dev apache2-dev apache2 build-essential'
+  apt 'libcurl4-openssl-dev apache2-dev apache2 build-essential' do
+    post :install, 'a2enmod rewrite'
+    post :install, 'a2enmod ssl'
+  end
 end
 
 package :passenger do
@@ -70,4 +74,8 @@ PassengerRuby /usr/bin/ruby"
   verify do
     has_file '/etc/apache2/sites-enabled/001-passenger'
   end
+end
+
+package :memcached do
+  apt 'memcached'
 end
