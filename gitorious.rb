@@ -141,7 +141,6 @@ package :start_ruby_daemons do
     post :install, 'update-rc.d git-daemon defaults'
     post :install, '/etc/init.d/git-daemon start'
   end
-  verify {has_process 'ruby'}
 end
 
 package :start_daemons do
