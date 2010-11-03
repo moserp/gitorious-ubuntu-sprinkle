@@ -216,6 +216,8 @@ end
 package :apache_config do
   transfer 'apache-config/gitorious', '/tmp/gitorious' do
     post :install, 'mv /tmp/gitorious /etc/apache2/sites-available/gitorious'
+  end
+  noop do
     post :install, 'ln -s /etc/apache2/sites-available/gitorious /etc/apache2/sites-enabled/002-gitorious'
     post :install, 'rm /etc/apache2/sites-enabled/000-default'
     post :install, 'apachectl restart'
