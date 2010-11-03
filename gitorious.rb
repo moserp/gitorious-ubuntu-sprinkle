@@ -157,7 +157,7 @@ package :database_config do
   requires :git_user
   transfer 'config/database.yml', '/tmp/database.yml' do
     post :install, 'mv /tmp/database.yml ~git/config/database.yml'
-    post :install, 'chown git:git ~git/config/database.yml'
+    #post :install, 'chown git:git ~git/config/database.yml'
   end
   verify {has_file '~git/config/database.yml'}
 end
@@ -166,7 +166,7 @@ package :gitorious_config do
   requires :git_user
   transfer 'config/gitorious.yml', '/tmp/gitorious.yml' do
     post :install, 'mv /tmp/gitorious.yml ~git/config/gitorious.yml'
-    post :install, 'chown git:git ~git/config/gitorious.yml'
+    #post :install, 'chown git:git ~git/config/gitorious.yml'
   end
   verify {has_file '~git/config/gitorious.yml'}
 end
