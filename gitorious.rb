@@ -4,6 +4,7 @@ policy :gitorious, :roles => :server do
   requires :sprinkle_dependencies
   requires :ubuntu_gitorious_dependencies
   requires :gitorious
+  requires :gitorious_symlink
   requires :config
   requires :initscripts
   requires :git_user
@@ -76,16 +77,20 @@ package :gitorious do
     pre :install, 'bash -c "export http_proxy=http://proxy.intra.bt.com:8080 && wget http://gitorious.org/gitorious/mainline/archive-tarball/master -O /tmp/gitorious.tar.gz"'
     pre :install, 'tar xfz /tmp/gitorious.tar.gz -C /var/www'
     pre :install, 'mv /var/www/gitorious-mainline /var/www/gitorious'
-    pre :install, 'adduser --system --home /var/www/gitorious/ --no-create-home --group --shell /bin/bash git chown -R git:git /var/www/gitorious'
-    pre :install, 'chown -R git:git /var/www/gitorious'
     # this next line should work, but http git clone is flakey on gitorious, so using the above tar file instead
     #pre :install, 'export http_proxy=http://proxy.intra.bt.com:8080 && git clone http://git.gitorious.org/gitorious/mainline.git /var/www/gitorious'
-    post :install, 'ln -s /var/www/gitorious/script/gitorious /usr/bin'
   end
 
   verify do
     has_directory '/var/www/gitorious'
   end
+end
+
+package :gitorious_symlink do
+  noop do
+    post :install, 'ln -s /var/www/gitorious/script/gitorious /usr/bin'
+  end
+  verify {has_symlink '/usr/bin/gitorious','/var/www/gitorious/script/gitorious'}
 end
 
 package :stomp_initd do
