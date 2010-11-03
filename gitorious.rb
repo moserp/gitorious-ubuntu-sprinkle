@@ -4,13 +4,22 @@ policy :gitorious, :roles => :server do
   requires :sprinkle_dependencies
   requires :ubuntu_gitorious_dependencies
   requires :gitorious
+  requires :config
   requires :initscripts
+  requires :git_user
+  requires :git_directories
 end
 
 package :initscripts do
   requires :gitdaemon_initd
   requires :gitpoller_initd
   requires :stomp_initd
+end
+
+package :config do
+  requires :database_config
+  requires :gitorious_config
+  requires :stomp_config
 end
 
 package :rdiscount do
@@ -109,20 +118,61 @@ package :gitdaemon_initd do
   end
 end
 
+package :database_config do
+  transfer 'config/database.yml', '/tmp/database.yml' do
+    post :install, 'mv /tmp/database.yml ~git/config/database.yml'
+    post :install, 'chown git:git ~git/config/database.yml'
+  end
+  verify {has_file '~git/config/database.yml'}
+end
+
+package :gitorious_config do
+  transfer 'config/gitorious.yml', '/tmp/gitorious.yml' do
+    post :install, 'mv /tmp/gitorious.yml ~git/config/gitorious.yml'
+    post :install, 'chown git:git ~git/config/gitorious.yml'
+  end
+  verify {has_file '~git/config/gitorious.yml'}
+end
+
+package :stomp_config do
+  noop do
+    post :install, 'cp ~git/config/broker.yml.example ~git/config/broker.yml'
+  end
+  verify {has_file '~git/config/broker.yml'}
+end
+
+package :git_user do
+  noop do
+    pre :install, 'adduser --system --home /var/www/gitorious/ --no-create-home --group --shell /bin/bash git'
+    post :install, 'chown -R git:git /var/www/gitorious'
+  end
+
+  verify do
+    file_contains '/etc/passwd', 'git'
+  end
+end
+
+package :git_directories do
+  noop do
+    post :install, "su git -c 'mkdir ~git/.ssh'"
+    post :install, "su git -c 'touch ~git/.ssh/authorized_keys'"
+    post :install, "su git -c 'chmod 700 ~git/.ssh'"
+    post :install, "su git -c 'chmod 600 ~git/ssh/authorized_keys'"
+    post :install, "su git -c 'mkdir ~git/tmp/pids'"
+    post :install, "su git -c 'mkdir ~git/repositories'"
+    post :install, "su git -c 'mkdir ~git/tarballs'"
+  end
+
+  verify do
+      has_file '~git/.ssh/authorized_keys'
+      has_directory '~git/tmp/pids'
+      has_directory '~git/repositories'
+      has_directory '~git/tarballs'
+  end
+end
+
 # TODO
 # logrotate
-
-# TODO as the git user:
-#mkdir .ssh
-#touch .ssh/authorized_keys
-#chmod 700 .ssh
-#chmod 600 .ssh/authorized_keys
-#mkdir tmp/pids
-#mkdir repositories
-#mkdir tarballs
-#cp config/database.yml config/database.yml
-#cp config/gitorious.yml config/gitorious.yml
-#cp config/broker.yml config/broker.yml
 
 package :sprinkle_dependencies do
   apt 'wget'
