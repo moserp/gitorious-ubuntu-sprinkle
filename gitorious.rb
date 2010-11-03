@@ -9,6 +9,7 @@ policy :gitorious, :roles => :server do
   requires :git_user
   requires :git_directories
   requires :start_daemons
+  requires :apache_config
 end
 
 package :initscripts do
@@ -79,7 +80,6 @@ package :gitorious do
     pre :install, 'chown -R git:git /var/www/gitorious'
     # this next line should work, but http git clone is flakey on gitorious, so using the above tar file instead
     #pre :install, 'export http_proxy=http://proxy.intra.bt.com:8080 && git clone http://git.gitorious.org/gitorious/mainline.git /var/www/gitorious'
-    post :install, 'apachectl restart'
   end
 
   verify do
@@ -210,6 +210,16 @@ end
 
 package :sprinkle_dependencies do
   apt 'wget'
+end
+
+package :apache_config do
+  transfer 'apache-config/gitorious', '/tmp/gitorious' do
+    post :install, 'mv /tmp/gitorious /etc/apache2/sites-available/gitorious'
+    post :install, 'ln -s /etc/apache2/sites-available/gitorious /etc/apache2/sites-enabled/002-gitorious'
+    post :install, 'rm /etc/apache2/sites-enabled/000-default'
+    post :install, 'apachectl restart'
+  end
+  verify {has_file '/etc/apache2/sites-enabled/002-gitorious'}
 end
 
 
