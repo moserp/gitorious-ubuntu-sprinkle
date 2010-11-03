@@ -80,6 +80,7 @@ package :gitorious do
     pre :install, 'chown -R git:git /var/www/gitorious'
     # this next line should work, but http git clone is flakey on gitorious, so using the above tar file instead
     #pre :install, 'export http_proxy=http://proxy.intra.bt.com:8080 && git clone http://git.gitorious.org/gitorious/mainline.git /var/www/gitorious'
+    post :install, 'ln -s /var/www/gitorious/script/gitorious /usr/bin'
   end
 
   verify do

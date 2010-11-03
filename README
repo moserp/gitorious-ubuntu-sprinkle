@@ -13,4 +13,4 @@ bundle exec sprinkle -s gitorious.rb
 
 Once the sprinkle script has run, you need to create an admin user:
 As the git user, run: 
-env RAILS_ENV=production ruby1.8 script/create_admin
+env RAILS_ENV=production ruby script/create_admin
