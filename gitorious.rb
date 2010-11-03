@@ -131,16 +131,23 @@ package :start_stomp do
   verify {has_process 'stompserver'}
 end
 
-package :start_ruby_daemons do
+package :start_git_poller do
   noop do
     post :install, 'chown root:root /etc/init.d/git-poller'
     post :install, 'chmod 755 /etc/init.d/git-poller'
     post :install, 'update-rc.d git-poller defaults'
     post :install, '/etc/init.d/git-poller start'
+  end
+  verify {has_file '~git/tmp/pids/poller0.pid'}
+end
+
+package :start_git_daemon do
+  noop do
     post :intsall, 'chown root:root /etc/init.d/git-daemon'
     post :install, 'update-rc.d git-daemon defaults'
     post :install, '/etc/init.d/git-daemon start'
   end
+  verify {has_file '~git/log/git-daemon.pid'}
 end
 
 package :start_daemons do
@@ -149,7 +156,8 @@ package :start_daemons do
   requires :gitdaemon_initd
   requires :gitorious_database
   requires :start_stomp
-  requires :start_ruby_daemons
+  requires :start_git_poller
+  requires :start_git_daemon
 end
 
 package :database_config do
