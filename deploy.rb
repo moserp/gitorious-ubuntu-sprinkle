@@ -1,2 +1,2 @@
-role :server, '192.168.56.10'
+role :server, 'git.nat.bt.com'
 default_run_options[:pty] = true

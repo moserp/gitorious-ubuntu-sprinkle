@@ -74,7 +74,7 @@ package :gitorious do
   gem 'mysql' do
     http_proxy 'http://proxy.intra.bt.com:8080'
     pre :install, 'bash -c "export http_proxy=http://proxy.intra.bt.com:8080 && wget http://gitorious.org/gitorious/mainline/archive-tarball/master -O /tmp/gitorious.tar.gz"'
-    pre :install, 'tar xfz ~/gitorious.tar.gz -C /var/www'
+    pre :install, 'tar xfz /tmp/gitorious.tar.gz -C /var/www'
     pre :install, 'mv /var/www/gitorious-mainline /var/www/gitorious'
     pre :install, 'adduser --system --home /var/www/gitorious/ --no-create-home --group --shell /bin/bash git chown -R git:git /var/www/gitorious'
     pre :install, 'chown -R git:git /var/www/gitorious'
