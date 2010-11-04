@@ -11,6 +11,7 @@ policy :gitorious, :roles => :server do
   requires :git_directories
   requires :start_daemons
   requires :apache_config
+  requires :logrotate
 end
 
 package :initscripts do
@@ -235,6 +236,13 @@ package :apache_config do
     post :install, 'apachectl restart'
   end
   verify {has_file '/etc/apache2/sites-enabled/002-gitorious'}
+end
+
+package :logrotate do
+  noop do
+    post :install, 'cp /var/www/gitorious//doc/templates/ubuntu/gitorious-logrotate /etc/logrotate.d/gitorious'
+  end
+  verify {has_file '/etc/logrotate.d/gitorious'}
 end
 
 
