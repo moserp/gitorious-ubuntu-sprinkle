@@ -1,3 +1,2 @@
-set :user, 'root'
-role :app, '109.144.14.247', :primary => true
-set :use_sudo, false
+role :server, 'git.nat.bt.com'
+default_run_options[:pty] = true
